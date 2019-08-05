@@ -39,7 +39,7 @@ public class DatabaseManager {
             session.save(tx);
             return new TransactionStatus(TransactionStatus.TransactionResult.SUCCESS, "Transaction added successfully");
         } catch (Exception ex) {
-            LOGGER.error("createTransaction - Error in deleting a transaction. Error is: ", ex);
+            LOGGER.error("createTransaction - Error in creating a transaction. Error is: ", ex);
             return new TransactionStatus(TransactionStatus.TransactionResult.ERROR, "Error in adding a new transaction. Error is: " + ex.getMessage());
         }
     }
@@ -57,6 +57,7 @@ public class DatabaseManager {
             return new TransactionStatus(TransactionStatus.TransactionResult.SUCCESS, "Transaction deleted successfully");
         } catch (Exception ex) {
             transaction.rollback();
+            LOGGER.error("createTransaction - Error in deleting a transaction. Error is: ", ex);
             return new TransactionStatus(TransactionStatus.TransactionResult.ERROR, "Error in deleting a transaction. Error is: " + ex.getMessage());
         }
     }
