@@ -15,14 +15,18 @@ public class Transaction implements Serializable {
     private double transactionAmount;
 
     @Column
+    private String transactionUUID;
+
+    @Column
     private int accountId;
 
     public Transaction() {
     }
 
-    public Transaction(double transactionAmount, int account) {
+    public Transaction(double transactionAmount, String transactionUUID, int accountId) {
         this.transactionAmount = transactionAmount;
-        this.accountId = account;
+        this.transactionUUID = transactionUUID;
+        this.accountId = accountId;
     }
 
     public int getTransactionId() {
@@ -47,5 +51,13 @@ public class Transaction implements Serializable {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public String getTransactionUUID() {
+        return transactionUUID;
+    }
+
+    public void setTransactionUUID(String transactionUUID) {
+        this.transactionUUID = transactionUUID;
     }
 }

@@ -4,8 +4,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import com.transactions.api.model.entity.Transaction;
 
+import org.hibernate.query.Query;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement
 public class DatabaseManager {
@@ -23,6 +26,39 @@ public class DatabaseManager {
             databaseManager = new DatabaseManager();
         }
         return databaseManager;
+    }
+
+
+    public TransactionStatus createTransaction(int accountId, double transactionAmount, String transactionUUID) {
+        LOGGER.info("createTransaction is triggered");
+        try {
+            Transaction tx = new Transaction();
+            tx.setTransactionAmount(transactionAmount);
+            tx.setAccountId(accountId);
+            tx.setTransactionUUID(transactionUUID);
+            session.save(tx);
+            return new TransactionStatus(TransactionStatus.TransactionResult.SUCCESS, "Transaction added successfully");
+        } catch (Exception ex) {
+            LOGGER.error("createTransaction - Error in deleting a transaction. Error is: ", ex);
+            return new TransactionStatus(TransactionStatus.TransactionResult.ERROR, "Error in adding a new transaction. Error is: " + ex.getMessage());
+        }
+    }
+
+    public TransactionStatus deleteTransaction(int accountId, String transactionUUID) {
+        LOGGER.info("deleteTransaction is triggered");
+        org.hibernate.Transaction transaction = session.beginTransaction();
+        try {
+            String deleteTx = "delete from Transaction where accountId=:accountId and transactionUUID=:transactionUUID";
+            Query query = session.createQuery(deleteTx);
+            query.setParameter("accountId", accountId);
+            query.setParameter("transactionUUID", transactionUUID);
+            int res = query.executeUpdate();
+            transaction.commit();
+            return new TransactionStatus(TransactionStatus.TransactionResult.SUCCESS, "Transaction deleted successfully");
+        } catch (Exception ex) {
+            transaction.rollback();
+            return new TransactionStatus(TransactionStatus.TransactionResult.ERROR, "Error in deleting a transaction. Error is: " + ex.getMessage());
+        }
     }
 
     /**
@@ -46,4 +82,5 @@ public class DatabaseManager {
             LOGGER.info("destroyDatabase has destroyed in-memory database.");
         }
     }
+
 }

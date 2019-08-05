@@ -12,29 +12,52 @@ import java.util.List;
 public class TransactionDTO {
     private int transactionId;
     private double transactionAmount;
+    private String transactionUUID;
     private int accountId;
 
     public TransactionDTO() {
     }
 
-    public TransactionDTO(int transactionId, double transactionAmount) {
+    public TransactionDTO(int transactionId, double transactionAmount, String transactionUUID, int accountId) {
         this.transactionId = transactionId;
         this.transactionAmount = transactionAmount;
+        this.transactionUUID = transactionUUID;
+        this.accountId = accountId;
     }
 
     public int getTransactionId() {
         return transactionId;
     }
 
+    public void setTransactionId(int transactionId) {
+        this.transactionId = transactionId;
+    }
+
     public double getTransactionAmount() {
         return transactionAmount;
+    }
+
+    public void setTransactionAmount(double transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
+
+    public String getTransactionUUID() {
+        return transactionUUID;
+    }
+
+    public void setTransactionUUID(String transactionUUID) {
+        this.transactionUUID = transactionUUID;
     }
 
     public int getAccountId() {
         return accountId;
     }
 
-//    public static TransactionDTO cloneFromEntity(Transaction transaction) {
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    //    public static TransactionDTO cloneFromEntity(Transaction transaction) {
 //        return new TransactionDTO(transaction.getTransactionId(), transaction.getTransactionAmount());
 //    }
 //
