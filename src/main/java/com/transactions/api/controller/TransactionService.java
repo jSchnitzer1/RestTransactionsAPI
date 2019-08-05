@@ -1,14 +1,12 @@
 package com.transactions.api.controller;
 
 import com.transactions.api.database.DatabaseManager;
-import com.transactions.api.model.dto.AccountsTransactionsDTO;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContext;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -35,25 +33,9 @@ public class TransactionService {
     }
 
     @POST
-    @Path("/createTestDatabase")
+    @Path("/testTransaction")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response createTestDatabase() {
-        LOGGER.info("createDatabase is triggered");
-        if(DBMANAGER.createTestDatabase())
-            return Response.ok("Test database is created successfully").build();
-        else
-            return Response.serverError().entity("Internal Server Error - unable to create the test database").build();
-    }
-
-    @GET
-    @Path("/testDatabase")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response checkTransactionEndpoint() {
-        LOGGER.info("checkTransactionEndpoint is triggered");
-        AccountsTransactionsDTO acDTO = DBMANAGER.testDatabase();
-        if(acDTO != null)
-            return Response.ok(acDTO, MediaType.APPLICATION_JSON).build();
-        else
-            return Response.serverError().entity("Internal Server Error - unable to fetch database records").build();
+    public Response testTransaction() {
+        return Response.ok("Test").build();
     }
 }

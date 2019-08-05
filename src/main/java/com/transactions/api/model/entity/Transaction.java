@@ -14,16 +14,15 @@ public class Transaction implements Serializable {
     @Column
     private double transactionAmount;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Account", referencedColumnName="accountId")
-    private Account account;
+    @Column
+    private int accountId;
 
     public Transaction() {
     }
 
-    public Transaction(double transactionAmount, Account account) {
+    public Transaction(double transactionAmount, int account) {
         this.transactionAmount = transactionAmount;
-        this.account = account;
+        this.accountId = account;
     }
 
     public int getTransactionId() {
@@ -42,11 +41,11 @@ public class Transaction implements Serializable {
         this.transactionAmount = transactionAmount;
     }
 
-    public Account getAccount() {
-        return account;
+    public int getAccountId() {
+        return accountId;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }
