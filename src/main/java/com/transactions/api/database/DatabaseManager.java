@@ -1,5 +1,6 @@
 package com.transactions.api.database;
 
+import com.transactions.api.model.dto.TransactionDTO;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,6 +9,7 @@ import com.transactions.api.model.entity.Transaction;
 
 import org.hibernate.query.Query;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
@@ -62,6 +64,17 @@ public class DatabaseManager {
         }
     }
 
+    public List<TransactionDTO> getTransactions(int accountId) {
+        List<Transaction> transactions = session.createQuery("from Transaction where accountId=:accountId")
+                .setParameter("accountId", accountId)
+                .list();
+        if(transactions != null && transactions.size() > 0) {
+            return TransactionDTO.cloneFromEntity(transactions);
+        }
+        // return empty list
+        return new ArrayList<>();
+    }
+
     /**
      * This method is creates a SessionFactory only and only if the connection to database is disrupted
      * or SessionFactory is closed or null
@@ -83,5 +96,4 @@ public class DatabaseManager {
             LOGGER.info("destroyDatabase has destroyed in-memory database.");
         }
     }
-
 }
