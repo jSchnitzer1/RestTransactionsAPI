@@ -57,14 +57,14 @@ public class TransactionDTO {
         this.accountId = accountId;
     }
 
-    //    public static TransactionDTO cloneFromEntity(Transaction transaction) {
-//        return new TransactionDTO(transaction.getTransactionId(), transaction.getTransactionAmount());
-//    }
-//
-//    public static List<TransactionDTO> cloneFromEntity(List<Transaction> transactions) {
-//        if(transactions == null || transactions.size() == 0) return null;
-//        List<TransactionDTO> transactionDTOs = new ArrayList<>();
-//        transactions.forEach(tx -> transactionDTOs.add(cloneFromEntity(tx)));
-//        return transactionDTOs;
-//    }
+    public static TransactionDTO cloneFromEntity(Transaction transaction) {
+        return new TransactionDTO(transaction.getTransactionId(), transaction.getTransactionAmount(), transaction.getTransactionUUID(), transaction.getAccountId());
+    }
+
+    public static List<TransactionDTO> cloneFromEntity(List<Transaction> transactions) {
+        if(transactions == null || transactions.size() == 0) return null;
+        List<TransactionDTO> transactionDTOs = new ArrayList<>();
+        transactions.forEach(tx -> transactionDTOs.add(cloneFromEntity(tx)));
+        return transactionDTOs;
+    }
 }

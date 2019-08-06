@@ -3,6 +3,7 @@ package com.transactions.api.controller;
 import com.transactions.api.database.DatabaseManager;
 import com.transactions.api.database.TransactionStatus;
 import com.transactions.api.model.ErrorMessage;
+import com.transactions.api.model.dto.TransactionDTO;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -14,6 +15,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.json.simple.*;
+
+import java.util.List;
 
 @Path("/transaction")
 public class TransactionService {
@@ -36,10 +39,18 @@ public class TransactionService {
     @POST
     @Path("/createTransaction/{accountId}/{transactionAmount}/{transactionUUID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createTransaction(@PathParam("accountId") int accountId, @PathParam("transactionAmount") int transactionAmount, @PathParam("transactionUUID") String transactionUUID) {
+    public Response createTransaction(@PathParam("accountId") int accountId, @PathParam("transactionAmount") double transactionAmount, @PathParam("transactionUUID") String transactionUUID) {
         LOGGER.info("createTransaction is triggered");
         String errorMessageStr = "Internal database error in creating a new transaction for accountId" + accountId;
         return createOrDeleteTransaction(accountId, DBMANAGER.createTransaction(accountId, transactionAmount, transactionUUID), errorMessageStr);
+    }
+
+    @GET
+    @Path("/getTransactions/{accountId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<TransactionDTO> getTransactions(@PathParam("accountId") int accountId) {
+        LOGGER.info("getTransactions is triggered");
+        return DBMANAGER.getTransactions(accountId);
     }
 
     @DELETE
