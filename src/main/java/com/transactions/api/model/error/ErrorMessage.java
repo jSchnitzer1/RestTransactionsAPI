@@ -1,4 +1,4 @@
-package com.transactions.api.model;
+package com.transactions.api.model.error;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

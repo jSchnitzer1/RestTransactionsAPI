@@ -1,6 +1,6 @@
 package com.transactions.api.exception;
 
-import com.transactions.api.model.ErrorMessage;
+import com.transactions.api.model.error.ErrorMessage;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

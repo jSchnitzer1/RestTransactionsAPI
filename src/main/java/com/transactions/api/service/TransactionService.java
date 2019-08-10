@@ -1,8 +1,9 @@
-package com.transactions.api.controller;
+package com.transactions.api.service;
 
 import com.transactions.api.database.DatabaseManager;
+import com.transactions.api.database.DatabaseManagerImpl;
 import com.transactions.api.database.TransactionStatus;
-import com.transactions.api.model.ErrorMessage;
+import com.transactions.api.model.error.ErrorMessage;
 import com.transactions.api.model.dto.TransactionDTO;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -21,14 +22,13 @@ import java.util.List;
 @Path("/transaction")
 public class TransactionService {
     private static final Logger LOGGER = Logger.getLogger(TransactionService.class.getName());
-    private static final DatabaseManager DBMANAGER = DatabaseManager.getInstance();
+    private static final DatabaseManager DBMANAGER = DatabaseManagerImpl.getInstance();
     @Context private ServletContext context;
 
     @PostConstruct
     public void postConst() {
-        String log4jConfigPath = context.getRealPath("WEB-INF/log4j.properties");
-        PropertyConfigurator.configure(log4jConfigPath);
         DBMANAGER.initDatabase();
+        ConfigureLogger(context);
     }
 
     @PreDestroy
@@ -36,6 +36,13 @@ public class TransactionService {
         DBMANAGER.destroyDatabase();
     }
 
+    /**
+     * creates a transaction against a specific account
+     * @param accountId the account that the transaction is created for
+     * @param transactionAmount the amount to be deducted
+     * @param transactionUUID The assigned UUID for the transaction
+     * @return a response whether the transaction created or not
+     */
     @POST
     @Path("/createTransaction/{accountId}/{transactionAmount}/{transactionUUID}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -45,6 +52,11 @@ public class TransactionService {
         return createOrDeleteTransaction(accountId, DBMANAGER.createTransaction(accountId, transactionAmount, transactionUUID), errorMessageStr);
     }
 
+    /**
+     * retrieve transactions for the account
+     * @param accountId get all transactions for the account by its id
+     * @return list of json serialized transactions
+     */
     @GET
     @Path("/getTransactions/{accountId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +65,12 @@ public class TransactionService {
         return DBMANAGER.getTransactions(accountId);
     }
 
+    /**
+     * delete a transaction by its uuid, and account id
+     * @param accountId the account used for this transaction
+     * @param transactionUUID the transaction uuid
+     * @return ok if deleted successfully, otherwise the specified error message
+     */
     @DELETE
     @Path("/deleteTransaction/{accountId}/{transactionUUID}")
     public Response deleteTransaction(@PathParam("accountId") int accountId, @PathParam("transactionUUID") String transactionUUID) {
@@ -72,5 +90,12 @@ public class TransactionService {
         }
         ErrorMessage errorMessage = new ErrorMessage(errorMessageStr, 500, ts.getMessage());
         return Response.serverError().entity(errorMessage).build();
+    }
+
+    private static void ConfigureLogger(ServletContext context) {
+        if(context != null) {
+            String log4jConfigPath = context.getRealPath("WEB-INF/log4j.properties");
+            PropertyConfigurator.configure(log4jConfigPath);
+        }
     }
 }
